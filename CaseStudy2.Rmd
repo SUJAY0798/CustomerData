@@ -12,14 +12,14 @@ library(sqldf)
 library(tidyverse)
 
 customer <- read.csv("E:/Assessment/casestudy.csv")
-customer
+head(customer)
 view(customer)
 ```
 
 ```{r}
 
 names(customer)[names(customer) == 'X'] <- 'id'
-customer
+head(customer)
 
 ```
 
@@ -29,7 +29,7 @@ each_yr_revenue <- customer %>%
   group_by(year) %>%
   summarise(total = sum(net_revenue))
 
-each_yr_revenue
+head(each_yr_revenue)
 
 each_yr_revenue %>% ggplot(aes(x=year, y = total)) +
               geom_col()+
@@ -41,15 +41,15 @@ each_yr_revenue %>% ggplot(aes(x=year, y = total)) +
 #•	Existing Customer Growth
 df2017 <-
    filter(customer, year=='2017' )
-df2017
+head(df2017)
 
 rer <- filter(customer,year=='2016')
-rer
+head(rer)
 
 df = merge(x = df2017, y = rer, by = 'customer_email')
 
 df$growth <- df$net_revenue.x-df$net_revenue.y
-df
+head(df)
 
 ```
 ```{r}
@@ -57,13 +57,13 @@ df
 
 r2017 <- filter(customer,year=='2017') 
 
-r2017
+head(r2017)
 ```
 
 ```{r}
 r2016 <- filter(customer,year=='2016')
 
-r2016
+head(r2016)
 ```
 
 
@@ -71,7 +71,7 @@ r2016
 ```{r}
 # For 
 existing_customer = merge(x = r2017, y = r2016, by = 'customer_email')
-existing_customer
+head(existing_customer)
 ```
 
 
@@ -79,7 +79,7 @@ existing_customer
 ```{r}
 #•	Existing Customer Revenue Current Year
 existing_customer_r_cy = existing_customer%>% select (customer_email,net_revenue.x, year.x)
-existing_customer_r_cy
+head(existing_customer_r_cy)
 ```
 
 
@@ -87,7 +87,7 @@ existing_customer_r_cy
 ```{r}
 #•	Existing Customer Revenue Prior Year
 existing_customer_r_py = existing_customer%>% select (customer_email,net_revenue.y, year.y)
-existing_customer_r_py
+head(existing_customer_r_py)
 ```
 
 
@@ -108,7 +108,7 @@ customers_2016 <- r2016 %>% select (customer_email)
 
 
 new_customer <- sqldf('SELECT * FROM customers_2017 EXCEPT SELECT * FROM customers_2016')
-new_customer
+head(new_customer)
 
 ```
 
@@ -118,7 +118,7 @@ new_customer
 #•	Lost Customers
 
 lost_customer <- sqldf('SELECT * FROM customers_2016 EXCEPT SELECT * FROM customers_2017')
-lost_customer
+head(lost_customer)
 ```
 
 

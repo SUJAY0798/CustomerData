@@ -1,0 +1,141 @@
+---
+title: "CaseStudy 2"
+author: "Sujay Patil"
+date: "4/11/2022"
+output: html_document
+---
+```{r}
+library(sqldf)
+```
+
+```{r}
+library(tidyverse)
+
+customer <- read.csv("E:/Assessment/casestudy.csv")
+customer
+view(customer)
+```
+
+```{r}
+
+names(customer)[names(customer) == 'X'] <- 'id'
+customer
+
+```
+
+```{r}
+#•	Total revenue for the current year
+each_yr_revenue <- customer %>%
+  group_by(year) %>%
+  summarise(total = sum(net_revenue))
+
+each_yr_revenue
+
+each_yr_revenue %>% ggplot(aes(x=year, y = total)) +
+              geom_col()+
+              labs(x="Year",title="Total Revenue for the current year")
+```
+
+
+```{r}
+#•	Existing Customer Growth
+df2017 <-
+   filter(customer, year=='2017' )
+df2017
+
+rer <- filter(customer,year=='2016')
+rer
+
+df = merge(x = df2017, y = rer, by = 'customer_email')
+
+df$growth <- df$net_revenue.x-df$net_revenue.y
+df
+
+```
+```{r}
+#Existing Customer Revenue Current Year
+
+r2017 <- filter(customer,year=='2017') 
+
+r2017
+```
+
+```{r}
+r2016 <- filter(customer,year=='2016')
+
+r2016
+```
+
+
+
+```{r}
+# For 
+existing_customer = merge(x = r2017, y = r2016, by = 'customer_email')
+existing_customer
+```
+
+
+
+```{r}
+#•	Existing Customer Revenue Current Year
+existing_customer_r_cy = existing_customer%>% select (customer_email,net_revenue.x, year.x)
+existing_customer_r_cy
+```
+
+
+
+```{r}
+#•	Existing Customer Revenue Prior Year
+existing_customer_r_py = existing_customer%>% select (customer_email,net_revenue.y, year.y)
+existing_customer_r_py
+```
+
+
+
+```{r}
+#•	Total Customers Current Year
+nrow(r2017)
+#•	Total Customers Previous Year
+nrow(r2016)
+```
+
+
+```{r}
+#•	New Customers
+
+customers_2017 <- r2017 %>% select (customer_email)
+customers_2016 <- r2016 %>% select (customer_email)
+
+
+new_customer <- sqldf('SELECT * FROM customers_2017 EXCEPT SELECT * FROM customers_2016')
+new_customer
+
+```
+
+
+ 
+```{r}
+#•	Lost Customers
+
+lost_customer <- sqldf('SELECT * FROM customers_2016 EXCEPT SELECT * FROM customers_2017')
+lost_customer
+```
+
+
+
+
+```{r}
+#•	New Customer Revenue 
+#•	New Customers
+
+
+#customers_2017 <- r2017 %>% select (customer_email,net_revenue)
+#customers_2016 <- r2016 %>% select (customer_email,net_revenue)
+
+
+#q2newcustomer <- anti_join(customers_2017, customers_2016,by = c("customer_email"))
+#q2newcustomer
+
+```
+ 
+
